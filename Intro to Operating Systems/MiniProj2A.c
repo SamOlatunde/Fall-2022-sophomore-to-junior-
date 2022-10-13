@@ -16,31 +16,37 @@ void * addSectionOfArray(void * tid);
 
 int main(int argc, char * argv[])
 {
-    // initializes the array 
-    for (int i = 1; i <= size; i++)
+   
+   // initializes the array 
+    for (int i = 0; i < size; i++)
     {
         array[i] = i % 257;
     }
 
     pthread_t threads[NUM_OF_THREADS];
-    int status,i;
+    int status;
     
     
-    for ( i = 0; i <= NUM_OF_THREADS; i++)
+
+    for ( int i = 0; i < NUM_OF_THREADS; i++)
     {
         status = pthread_create(&threads[i], NULL, addSectionOfArray, (void *)(i+1));
-    
+        
         if(status != 0)
         {
-            printf("Oops.pthread_create returned error code %d", status);
+            printf("Oops.pthread_create returned error code %d\n", status);
             exit(-1);
         }
         // isn't this causing sequential execution??
        
     }
     
-    pthread_join(threads[i], NULL);
-    printf("The value of TOTAL after the execution of all threads is, %d", TOTAL);
+    for(int i = 0; i <NUM_OF_THREADS; i++)
+    {
+        pthread_join(threads[i], NULL);
+    }
+    
+    printf("The value of TOTAL after the execution of all threads is, %d\n", TOTAL);
 
     
     return 0; 
@@ -48,9 +54,9 @@ int main(int argc, char * argv[])
 
 void * addSectionOfArray(void * tid)
 {
-    int * t = (int *)tid;
-
-    for(int i = ((*t-1) *2000); i <= (((*t)*2000)-1); i++)
+    int t = tid;
+   
+    for (int i = ((t - 1) * 2000); i <= (((t) * 2000) - 1); i++)
     {
         TOTAL += array[i];
     }

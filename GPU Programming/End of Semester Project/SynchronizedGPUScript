@@ -9,7 +9,7 @@
 #-----------------------------------------------------------------
 
 #SBATCH -J mysimplejob           # Job name
-#SBATCH -o GPU16k.%j.out    # Specify stdout output file (%j expands to jobId)
+#SBATCH -o SynchronizedGPU.%j.out    # Specify stdout output file (%j expands to jobId)
 #SBATCH -p gtx		             # Queue name (EC: Options: gtx, v100, p100)
 #SBATCH -N 1                     # Total number of nodes requested (16 cores/node)
 #SBATCH -n 1                     # Total number of tasks
@@ -31,7 +31,7 @@ module load cuda/10.1   #EC updated 02/10/2020
 # -o is a compilation flag
 # a.out is the name of your executable
 
-nvcc GPU16k.cu -o a.out
+nvcc  -L/usr/lib/x86_64-linux-gnu --std=c++11 -rdc=true -gencode=arch=compute_70,code=sm_70 SynchronizedGPU.cu -o a.out
 
 #============================
 # LAUNCH YOUR EXECUTABLE
